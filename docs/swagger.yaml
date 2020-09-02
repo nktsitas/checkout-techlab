@@ -1,0 +1,231 @@
+basePath: /
+definitions:
+  auth.loginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.tokenResponse:
+    properties:
+      access_token:
+        example: generated.jwt.token
+        type: string
+    type: object
+  bank.CreditCard:
+    properties:
+      cvv:
+        type: string
+      expiry:
+        type: string
+      number:
+        type: string
+    type: object
+  gateway.Authorization:
+    properties:
+      amount:
+        example: 100
+        type: number
+      credit_card:
+        $ref: '#/definitions/bank.CreditCard'
+        type: object
+      currency:
+        example: EUR
+        type: string
+    type: object
+  handlers.actionsResponse:
+    properties:
+      amount:
+        example: 100
+        type: number
+      currency:
+        example: EUR
+        type: string
+    type: object
+  handlers.authResponse:
+    properties:
+      amount:
+        example: 100
+        type: number
+      currency:
+        example: EUR
+        type: string
+      id:
+        example: unique_authorization_id
+        type: string
+    type: object
+  handlers.requestParams:
+    properties:
+      amount:
+        example: 100
+        type: number
+      id:
+        example: unique_authorization_id
+        type: string
+    type: object
+  handlers.voidRequestParams:
+    properties:
+      id:
+        example: unique_authorization_id
+        type: string
+    type: object
+host: localhost:2012
+info:
+  contact:
+    email: nktsitas@gmail.com
+    name: Nikos Tsitas
+  description: This is a simple Gateway service for Payments
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Checkout.com API Challenge
+  version: "1.0"
+paths:
+  /authorize:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new authorization
+      parameters:
+      - description: Create authorization
+        in: body
+        name: authorization
+        required: true
+        schema:
+          $ref: '#/definitions/gateway.Authorization'
+      - description: generated.jwt.token
+        in: header
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.authResponse'
+      summary: Creates a new authorization
+      tags:
+      - status
+  /capture:
+    post:
+      consumes:
+      - application/json
+      description: Captures amount from authorization
+      parameters:
+      - description: Capture Amount
+        in: body
+        name: captureRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.requestParams'
+      - description: generated.jwt.token
+        in: header
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.actionsResponse'
+      summary: Captures amount from authorization
+      tags:
+      - status
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Logins a user and provides an authentication token
+      parameters:
+      - description: User Credentials
+        in: body
+        name: Credentials
+        required: true
+        schema:
+          $ref: '#/definitions/auth.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.tokenResponse'
+      summary: Logins a user and provides an authentication token
+      tags:
+      - status
+  /refund:
+    post:
+      consumes:
+      - application/json
+      description: Refunds a previously captured amount from authorization
+      parameters:
+      - description: Refund Amount
+        in: body
+        name: refundRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.requestParams'
+      - description: generated.jwt.token
+        in: header
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.actionsResponse'
+      summary: Refunds a previously captured amount from authorization
+      tags:
+      - status
+  /status/ping:
+    get:
+      consumes:
+      - application/json
+      description: Get a server status update
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get a server status update
+      tags:
+      - status
+  /void:
+    post:
+      consumes:
+      - application/json
+      description: Voids a transaction without charging the user
+      parameters:
+      - description: Refund Amount
+        in: body
+        name: voidRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.voidRequestParams'
+      - description: generated.jwt.token
+        in: header
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.actionsResponse'
+      summary: Voids a transaction without charging the user
+      tags:
+      - status
+swagger: "2.0"

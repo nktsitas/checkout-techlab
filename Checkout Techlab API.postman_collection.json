@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "1fc93182-01e9-4b47-a9d4-8c23b51f6d8b",
+		"name": "Checkout Techlab API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:2012/status/ping",
+					"host": [
+						"localhost"
+					],
+					"port": "2012",
+					"path": [
+						"status",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e603ab26-46d6-48f3-945e-b0b119122975",
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"access_token\", data.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Username\": \"Checkout\",\r\n    \"Password\": \"Checkout\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2012/login",
+					"host": [
+						"localhost"
+					],
+					"port": "2012",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorize",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"credit_card\": {\r\n        \"number\": \"4000 0000 0000 0123\",\r\n        \"expiry\": \"07/22\",\r\n        \"cvv\": \"123\"\r\n    },\r\n    \"amount\": 200.00,\r\n    \"currency\": \"EUR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2012/authorize",
+					"host": [
+						"localhost"
+					],
+					"port": "2012",
+					"path": [
+						"authorize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Void",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"11824394666689f1a639dd99c0f3be350a5fcde3a1fe3a36cd9baa43589223a1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2012/void",
+					"host": [
+						"localhost"
+					],
+					"port": "2012",
+					"path": [
+						"void"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Capture",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"11824394666689f1a639dd99c0f3be350a5fcde3a1fe3a36cd9baa43589223a1\",\r\n    \"amount\": 50.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2012/capture",
+					"host": [
+						"localhost"
+					],
+					"port": "2012",
+					"path": [
+						"capture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refund",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"23be7d64262cf606958465625f8f6475f4e96abe5bbd650f902acd8298a531be\",\r\n    \"amount\": 50.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2012/refund",
+					"host": [
+						"localhost"
+					],
+					"port": "2012",
+					"path": [
+						"refund"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0f27a96e-023f-4b8e-9e64-b7c5cd7c7184",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2f8f970a-ef13-4052-959b-173ace135ee2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "6895c065-4b0c-4c17-a3e4-c0ed7ecde778",
+			"key": "access_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJjbGllbnQiOiJDaGVja291dCIsImV4cCI6MTU5OTA1OTgwMH0.apjP5fZMD1j-sIL0BctHOgkCVub9su1NoKNJ3WFJROE"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
